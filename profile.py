@@ -49,7 +49,7 @@ for i in range(params.nodeCount):
 
 for i, node in enumerate(nodes):
     # Install and execute a script that is contained in the repository.
-    node.addService(pg.Execute(shell="sh", command="/local/repository/start.sh {} {} > /home/rdma-{}/start.log 2>&1".format(params.rdmaType,
+    node.addService(pg.Execute(shell="sh", command="/local/repository/start.sh {} {} > /local/repository/rdma-{}-start.log 2>&1".format(params.rdmaType,
                                                                                                                             "{}.{}".format(BASE_IP, 1 + i), params.rdmaType)))
 
 # Print the RSpec to the enclosing page.
