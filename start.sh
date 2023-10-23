@@ -38,7 +38,7 @@ add_siw() {
 
 link_rdma_device() {
   printf "Link RDMA"
-  sudo rdma link add t_siw type "$1" netdev "$2"
+  sudo rdma link add t_siw type "$1" netdev "$ifname"
 }
 
 install_essential_pkgs() {
@@ -53,6 +53,9 @@ if [ "$1" == "siw" ]; then
   add_siw
 fi
 
-link_rdma_device "$1" "$2"
+ifname=$(ip route list "%2" | awk '{print $3}')
+printf "%s" "interface name"
+
+link_rdma_device "$1" "$ifname"
 
 printf "%s: %s\n" "$(date +"%T.%N")" "Profile setup completed!"
