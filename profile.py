@@ -14,6 +14,8 @@ import geni.portal as portal
 # Import the ProtoGENI library.
 import geni.rspec.pg as pg
 
+BASE_IP = "10.20.1"
+BANDWIDTH = 10000000
 # Create a portal context.
 pc = portal.Context()
 
@@ -31,10 +33,18 @@ params = pc.bindParameters()
 request = pc.makeRequestRSpec()
 
 nodes = []
+lan = request.LAN()
+lan.bandwidth = BANDWIDTH
+
 for i in range(params.nodeCount):
     # Add a raw PC to the request.
     name = "node"+str(i+1)
     node = request.RawPC(name)
+
+    interface = node.addInterface("if1")
+    interface.addAddress(pg.IPv4Address("{}.{}".format(BASE_IP, 1 + len(nodes)), "255.255.255.0"))
+    lan.addInterface(interface)
+
     nodes.append(node)
 
 for i, node in enumerate(nodes):
