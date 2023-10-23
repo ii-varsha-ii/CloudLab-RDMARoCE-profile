@@ -20,7 +20,7 @@ BANDWIDTH = 10000000
 pc = portal.Context()
 
 pc.defineParameter(
-    "rdmaType", "Type of RDMA", portal.ParameterType.STRING, 'Soft-RoCE',
+    "rdmaType", "Type of RDMA", portal.ParameterType.STRING, 'siw',
     [('rxe', 'Soft-RoCE'),('siw','Soft-iWARP')],
     longDescription="The type of RDMA to set up in the nodes. Soft-iWARP / Soft-RoCE")
 
