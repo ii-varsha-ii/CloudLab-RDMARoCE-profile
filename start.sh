@@ -38,7 +38,7 @@ add_siw() {
 
 link_rdma_device() {
   printf "Link RDMA"
-  sudo rdma link add t_siw type $3 netdev eno1
+  sudo rdma link add t_siw type "$1" netdev "$2"
 }
 
 install_essential_pkgs() {
@@ -46,11 +46,13 @@ install_essential_pkgs() {
   sudo apt-get install build-essential cmake gcc libudev-dev libnl-3-dev libnl-route-3-dev ninja-build pkg-config valgrind
 }
 
-if [ "$3" == "rdma_rxe" ]; then
+if [ "$1" == "rdma_rxe" ]; then
   add_rdma_rxe
-if [ "$3" == "siw" ]; then
+fi
+if [ "$1" == "siw" ]; then
   add_siw
+fi
 
-link_rdma_device
+link_rdma_device "$1" "$2"
 
 printf "%s: %s\n" "$(date +"%T.%N")" "Profile setup completed!"
