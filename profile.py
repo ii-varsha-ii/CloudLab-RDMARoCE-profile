@@ -4,7 +4,7 @@ Cloudlab profile to setup RDMA RoCE. Each node runs on Ubuntu 22.04.
 Instructions:
 Create an experiment in CloudLab.
 Atleast have 2 nodes in the topology for the experiment.
-Select rdma type - siw, roce, or both
+Select rdma type - Soft-iWARP / Soft-RoCE
 
 Wait for the profile instance to start, then click on the node in the topology and choose the `shell` menu item.
 """
