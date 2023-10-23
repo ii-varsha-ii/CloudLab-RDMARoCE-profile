@@ -6,8 +6,8 @@ initial_setup() {
   printf "Updating packages...\n"
   sudo apt-get update
   printf "Install IBVerbs, RDMA_CM and utils \n"
-  sudo apt-get install build-essential libelf-dev cmake
-  sudo apt-get install libibverbs1 libibverbs-dev librdmacm1 librdmacm-dev rdmacm-utils ibverbs-utils
+  sudo apt-get install build-essential libelf-dev cmake -y
+  sudo apt-get install libibverbs1 libibverbs-dev librdmacm1 librdmacm-dev rdmacm-utils ibverbs-utils -y
 }
 
 add_ib_core() {
@@ -22,7 +22,7 @@ add_rdma_cm() {
 
 install_essential_pkgs() {
   printf "Installing other packages... \n"
-  sudo apt-get install build-essential cmake gcc libudev-dev libnl-3-dev libnl-route-3-dev ninja-build pkg-config valgrind
+  sudo apt-get install build-essential cmake gcc libudev-dev libnl-3-dev libnl-route-3-dev ninja-build pkg-config valgrind -y
 }
 
 add_rdma_rxe() {
