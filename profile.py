@@ -21,7 +21,7 @@ pc = portal.Context()
 
 pc.defineParameter(
     "rdmaType", "Type of RDMA", portal.ParameterType.STRING, 'Soft-RoCE',
-    [('Soft-RoCE','rdma_rxe'),('Soft-iWARP','siw')],
+    [('Soft-RoCE','rxe'),('Soft-iWARP','siw')],
     longDescription="The type of RDMA to set up in the nodes. Soft-iWARP / Soft-RoCE")
 
 pc.defineParameter(

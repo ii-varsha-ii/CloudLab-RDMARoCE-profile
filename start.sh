@@ -2,8 +2,6 @@
 
 echo "This is a silly script" > /tmp/silly.txt
 
-INTERFACE="if1"
-
 initial_setup() {
   printf "Updating packages..."
   sudo apt-get update
@@ -46,15 +44,15 @@ install_essential_pkgs() {
   sudo apt-get install build-essential cmake gcc libudev-dev libnl-3-dev libnl-route-3-dev ninja-build pkg-config valgrind
 }
 
-if [ "$1" == "rdma_rxe" ]; then
+if [ "$1" == "rxe" ]; then
   add_rdma_rxe
 fi
 if [ "$1" == "siw" ]; then
   add_siw
 fi
 
-ifname=$(ip route list "%2" | awk '{print $3}')
-printf "%s" "interface name"
+ifname=$(ip route list "$2""/24" | awk '{print $3}')
+printf "%s" "$ifname"
 
 link_rdma_device "$1" "$ifname"
 
