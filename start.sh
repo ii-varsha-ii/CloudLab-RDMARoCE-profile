@@ -20,6 +20,11 @@ add_rdma_cm() {
   sudo modprobe rdma_cm
 }
 
+install_essential_pkgs() {
+  printf "Installing other packages... \n"
+  sudo apt-get install build-essential cmake gcc libudev-dev libnl-3-dev libnl-route-3-dev ninja-build pkg-config valgrind
+}
+
 add_rdma_rxe() {
   printf "Installing rdma_rxe \n"
   sudo modprobe rdma_rxe
@@ -39,10 +44,10 @@ link_rdma_device() {
   sudo rdma link add t_siw type "$1" netdev "$ifname"
 }
 
-install_essential_pkgs() {
-  printf "Installing other packages... \n"
-  sudo apt-get install build-essential cmake gcc libudev-dev libnl-3-dev libnl-route-3-dev ninja-build pkg-config valgrind
-}
+initial_setup
+add_ib_core
+add_rdma_cm
+install_essential_pkgs
 
 if [ "$1" == "rxe" ]; then
   add_rdma_rxe
