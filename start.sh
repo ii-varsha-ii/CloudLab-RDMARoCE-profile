@@ -6,7 +6,7 @@ initial_setup() {
   printf "Updating packages...\n"
   sudo apt-get update
   printf "Install IBVerbs, RDMA_CM and utils \n"
-  sudo apt-get install build-essential libelf-dev cmake -y
+  sudo apt-get install build-essential libelf-dev cmake iperf3 perftest -y
   sudo apt-get install libibverbs1 libibverbs-dev librdmacm1 librdmacm-dev rdmacm-utils ibverbs-utils -y
 }
 
