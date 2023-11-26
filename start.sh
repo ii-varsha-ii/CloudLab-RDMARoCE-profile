@@ -56,7 +56,7 @@ if [ "$1" == "siw" ]; then
   add_siw
 fi
 
-if [ "$3" == true ]; then
+if [ "$3" == "True" ]; then
   sudo apt update
   sudo apt install redis-server
 fi
