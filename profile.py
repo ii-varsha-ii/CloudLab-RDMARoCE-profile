@@ -27,6 +27,10 @@ pc.defineParameter(
 pc.defineParameter(
     "nodeCount", "Number of nodes in the experiment.", portal.ParameterType.INTEGER, 2,
     longDescription="Number of nodes in the topology. It is recommended to keep it 2")
+pc.defineParameter(
+    "redisAvailable", "Do you want redis running in your nodes?", portal.ParameterType.BOOLEAN, False,
+    longDescription="Redis Server will be setup in all the nodes."
+)
 
 params = pc.bindParameters()
 # Create a Request object to start building the RSpec.
@@ -51,6 +55,9 @@ for i, node in enumerate(nodes):
     # Install and execute a script that is contained in the repository.
     node.addService(pg.Execute(shell="sh", command="/local/repository/start.sh {} {} > /local/repository/rdma-{}-start.log 2>&1".format(params.rdmaType,
                                                                                                                             "{}.{}".format(BASE_IP, 1 + i), params.rdmaType)))
+    node.addService(pg.Execute(shell="sh",
+                               command="/local/repository/redis.sh {} > /local/repository/redis-start.log 2>&1".format(
+                                   params.redisAvailable)))
 
 # Print the RSpec to the enclosing page.
 pc.printRequestRSpec(request)

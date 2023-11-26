@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "This is a silly script" > /tmp/silly.txt
+printf "Startup script to setup RDMA \n"
 
 initial_setup() {
   printf "Updating packages...\n"
@@ -41,7 +41,7 @@ add_siw() {
 
 link_rdma_device() {
   printf "Link RDMA \n"
-  sudo rdma link add t_siw type "$1" netdev "$ifname"
+  sudo rdma link add t_"$ifname" type "$1" netdev "$ifname"
 }
 
 initial_setup
@@ -61,4 +61,4 @@ printf "%s\n" "$ifname"
 
 link_rdma_device "$1" "$ifname"
 
-printf "%s: %s\n" "$(date +"%T.%N")" "Profile setup completed!"
+printf "%s: %s\n" "$(date +"%T.%N")" "RDMA setup completed!"
