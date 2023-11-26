@@ -1,6 +1,6 @@
 #!/bin/bash
 
-printf "Startup script to setup RDMA \n"
+printf "Startup script to setup RDMA - $1 $2 $3 \n"
 
 initial_setup() {
   printf "Updating packages...\n"
