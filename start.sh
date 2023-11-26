@@ -57,8 +57,9 @@ if [ "$1" == "siw" ]; then
 fi
 
 if [ "$3" == "True" ]; then
+  printf "Installing redis-server \n"
   sudo apt update
-  sudo apt install redis-server
+  sudo apt install redis-server -y
 fi
 
 ifname=$(ip route list "$2""/24" | awk '{print $3}')
