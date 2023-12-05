@@ -1,6 +1,13 @@
 #!/bin/bash
 
-printf "Startup script to setup RDMA - $1 $2 $3 \n"
+set +x
+
+if [ "$#" -ne 4 ]; then
+    echo "Usage: $0 <RDMA type: rxe, siw>  <Node IP address> <Redis Availability: True, False> <Node Number: 0....N>"
+    exit 1
+fi
+
+printf "Startup script to setup RDMA - RDMA type: $1 Node IP $2 Redis Availability: $3 Node Number: $4 \n"
 
 initial_setup() {
   printf "Updating packages...\n"
@@ -58,8 +65,7 @@ fi
 
 if [ "$3" == "True" ]; then
   printf "Installing redis-server \n"
-  sudo apt update
-  sudo apt install redis-server -y
+  sudo /local/repository/redis_start.sh $3 $4
 fi
 
 ifname=$(ip route list "$2""/24" | awk '{print $3}')
