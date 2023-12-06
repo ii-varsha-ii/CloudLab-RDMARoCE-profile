@@ -20,13 +20,13 @@ BANDWIDTH = 10000000
 pc = portal.Context()
 
 pc.defineParameter(
-    "rdmaType", "Type of RDMA", portal.ParameterType.STRING, 'siw',
+    "rdmaType", "Type of RDMA", portal.ParameterType.STRING, 'rxe',
     [('rxe', 'Soft-RoCE'),('siw','Soft-iWARP')],
     longDescription="The type of RDMA to set up in the nodes. Soft-iWARP / Soft-RoCE")
 
 pc.defineParameter(
-    "nodeCount", "Number of nodes in the experiment.", portal.ParameterType.INTEGER, 3,
-    longDescription="Number of nodes in the topology. It is recommended to keep it 3")
+    "nodeCount", "Number of nodes in the experiment.", portal.ParameterType.INTEGER, 2,
+    longDescription="Number of nodes in the topology. It is recommended to keep it 2")
 pc.defineParameter(
     "redisAvailable", "Do you want redis running in your nodes?", portal.ParameterType.BOOLEAN, False,
     longDescription="Redis Server will be setup in all the nodes."
