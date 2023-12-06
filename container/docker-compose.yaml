@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  agent:
+    image: adarshzededa/rdma-redis-agent:latest
+    environment:
+      - REDIS_MASTER_IP=127.0.0.1
+      - REDIS_MASTER_PORT=6379
+      - REDIS_MASTER_PASSWORD=
+      - REDIS_WRITE_KEY=1
+      - REDIS_LISTEN_KEY=0
+      - SQL_DB_USER=postgres
+      - SQL_DB_PASSWORD=postgres
+      - SQL_DB_NAME=postgres
+      - SQL_DB_HOST=127.0.0.1
+      - SQL_DB_PORT=5432
+    network_mode: "host"
+    depends_on:
+      - mysql
+
+  sql:
+    image: postgres:12
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    network_mode: "host"
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+
+volumes:
+  dbdata: { }

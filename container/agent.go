@@ -29,6 +29,7 @@ func initialize() {
 	redisMasterPassword = utils.GetEnv("REDIS_MASTER_PASSWORD", false)
 	redisWriteKey = utils.GetEnv("REDIS_WRITE_KEY", true)
 	redisListenKey = utils.GetEnv("REDIS_LISTEN_KEY", true)
+
 	sqlDBUser = utils.GetEnv("SQL_DB_USER", true)
 	sqlDBPassword = utils.GetEnv("SQL_DB_PASSWORD", true)
 	sqlDBName = utils.GetEnv("SQL_DB_NAME", true)
