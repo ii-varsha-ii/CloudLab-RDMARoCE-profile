@@ -20,7 +20,9 @@ var (
 )
 
 func InitializeSQLClient(sqlDBUser, sqlDBPassword, sqlDBHost, sqlDBPort, sqlDBName string) error {
-	sqlDB, err = sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", sqlDBUser, sqlDBPassword, sqlDBHost, sqlDBPort, sqlDBName))
+	connectStr := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", sqlDBUser, sqlDBPassword, sqlDBHost, sqlDBPort, sqlDBName)
+	log.Infof("InitializeSQLClient: SQL connect string: %s", connectStr)
+	sqlDB, err = sql.Open("mysql", connectStr)
 	if err != nil {
 		log.Errorf("Exception while initializing SQL client: %v", err)
 		return err

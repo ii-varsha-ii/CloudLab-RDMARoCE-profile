@@ -1,32 +1,31 @@
 version: '3.8'
 
 services:
-  # Go application container
-  server-agent:
+  agent:
     image: adarshzededa/rdma-redis-agent:latest
     environment:
-      - REDIS_MASTER_IP="10.20.1.1"
-      - REDIS_MASTER_PORT="6379"
-      - REDIS_MASTER_PASSWORD=""
-      - REDIS_WRITE_KEY="0"
-      - REDIS_LISTEN_KEY="1"
-      - SQL_DB_USER="rdmaredis"
-      - SQL_DB_PASSWORD="rdmaredis"
-      - SQL_DB_NAME="rdmaredis"
-      - SQL_DB_HOST="10.20.1.1"
-      - SQL_DB_PORT="3306"
+      - REDIS_MASTER_IP=10.20.1.1
+      - REDIS_MASTER_PORT=6379
+      - REDIS_MASTER_PASSWORD=
+      - REDIS_WRITE_KEY=1
+      - REDIS_LISTEN_KEY=0
+      - SQL_DB_USER=rdmaredis
+      - SQL_DB_PASSWORD=rdmaredis
+      - SQL_DB_NAME=rdmaredis
+      - SQL_DB_HOST=10.20.1.1
+      - SQL_DB_PORT=3306
     network_mode: "host"
+    restart: always
     depends_on:
       - mysql
 
-  # MySQL container
   mysql:
     image: mysql:latest
     environment:
-      - MYSQL_ROOT_PASSWORD="rdmaredis"
-      - MYSQL_DATABASE="rdmaredis"
-      - MYSQL_USER="rdmaredis"
-      - MYSQL_PASSWORD="rdmaredis"
+      - MYSQL_ROOT_PASSWORD=rdmaredis
+      - MYSQL_DATABASE=rdmaredis
+      - MYSQL_USER=rdmaredis
+      - MYSQL_PASSWORD=rdmaredis
     network_mode: "host"
     volumes:
       - mysql-data:/var/lib/mysql
