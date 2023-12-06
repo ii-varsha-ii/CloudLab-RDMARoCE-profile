@@ -1,4 +1,4 @@
-module github.com/ii-varsha-ii/CloudLab-RDMARoCE-profile/server_container
+module github.com/ii-varsha-ii/CloudLab-RDMARoCE-profile/container
 
 go 1.21.1
 
