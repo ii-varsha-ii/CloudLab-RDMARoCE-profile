@@ -1,10 +1,11 @@
 package sql_handler
 
 import (
+	"database/sql"
 	"fmt"
 	"time"
 
-	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/ii-varsha-ii/CloudLab-RDMARoCE-profile/container/data"
 	log "github.com/sirupsen/logrus"
 )
