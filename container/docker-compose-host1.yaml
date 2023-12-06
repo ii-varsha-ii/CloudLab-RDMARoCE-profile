@@ -3,7 +3,7 @@ version: '3.8'
 services:
   # Go application container
   server-agent:
-    image: adarshzededa/rdma-redis-master:latest
+    image: adarshzededa/rdma-redis-agent:latest
     environment:
       - REDIS_MASTER_IP="10.20.1.1"
       - REDIS_MASTER_PORT="6379"
