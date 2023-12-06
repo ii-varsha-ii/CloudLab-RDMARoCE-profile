@@ -51,10 +51,19 @@ link_rdma_device() {
   sudo rdma link add t_"$ifname" type "$1" netdev "$ifname"
 }
 
+install_docker() {
+  printf "Installing docker \n"
+  curl -fsSL https://get.docker.com -o get-docker.sh
+  sudo sh get-docker.sh
+  sudo usermod -aG docker $USER
+  newgrp docker
+}
+
 initial_setup
 add_ib_core
 add_rdma_cm
 install_essential_pkgs
+install_docker
 
 if [ "$1" == "rxe" ]; then
   add_rdma_rxe
@@ -74,3 +83,6 @@ printf "%s\n" "$ifname"
 link_rdma_device "$1" "$ifname"
 
 printf "%s: %s\n" "$(date +"%T.%N")" "RDMA setup completed!"
+
+#docker run --network host -e REDIS_MASTER_IP="10.20.1.1" -e REDIS_MASTER_PORT=6379 -e REDIS_MASTER_KEY="0" adarshzededa/rdma-redis-master:latest
+#docker run --network host -e REDIS_MASTER_IP="10.20.1.2" -e REDIS_MASTER_PORT=6379 -e REDIS_MASTER_KEY="0" adarshzededa/rdma-redis-client:latest
