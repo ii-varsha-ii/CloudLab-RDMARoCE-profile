@@ -4,31 +4,30 @@ services:
   agent:
     image: adarshzededa/rdma-redis-agent:latest
     environment:
-      - REDIS_MASTER_IP=10.20.1.1
+      - REDIS_MASTER_IP=127.0.0.1
       - REDIS_MASTER_PORT=6379
       - REDIS_MASTER_PASSWORD=
       - REDIS_WRITE_KEY=0
       - REDIS_LISTEN_KEY=1
-      - SQL_DB_USER=rdmaredis
-      - SQL_DB_PASSWORD=rdmaredis
-      - SQL_DB_NAME=rdmaredis
-      - SQL_DB_HOST=10.20.1.1
-      - SQL_DB_PORT=3306
+      - SQL_DB_USER=postgres
+      - SQL_DB_PASSWORD=postgres
+      - SQL_DB_NAME=postgres
+      - SQL_DB_HOST=127.0.0.1
+      - SQL_DB_PORT=5432
     network_mode: "host"
     restart: always
     depends_on:
-      - mysql
+      - sql
 
-  mysql:
-    image: mysql:latest
+  sql:
+    image: postgres:12
     environment:
-      - MYSQL_ROOT_PASSWORD=rdmaredis
-      - MYSQL_DATABASE=rdmaredis
-      - MYSQL_USER=rdmaredis
-      - MYSQL_PASSWORD=rdmaredis
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
     network_mode: "host"
     volumes:
-      - mysql-data:/var/lib/mysql
+      - dbdata:/var/lib/postgresql/data
 
 volumes:
-  mysql-data:
+  dbdata: { }
