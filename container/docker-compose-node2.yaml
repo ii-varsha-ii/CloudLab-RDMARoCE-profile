@@ -7,8 +7,8 @@ services:
       - REDIS_MASTER_IP=10.20.1.1
       - REDIS_MASTER_PORT=6379
       - REDIS_MASTER_PASSWORD=
-      - REDIS_WRITE_KEY=1
-      - REDIS_LISTEN_KEY=0
+      - REDIS_WRITE_KEY=0
+      - REDIS_LISTEN_KEY=1
       - SQL_DB_USER=rdmaredis
       - SQL_DB_PASSWORD=rdmaredis
       - SQL_DB_NAME=rdmaredis
