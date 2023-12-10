@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package api.v1;
+
+option go_package = "/data";
+
+import "google/protobuf/timestamp.proto";
+
+
+message RPCMessageRequest {
+  string Message = 1;
+  google.protobuf.Timestamp WriteTime = 2;
+}
+
+message RPCMessageResponse {
+  bool inserted = 1;
+}
+
+service RPCMessageService {
+  rpc Insert(RPCMessageRequest) returns (RPCMessageResponse) {}
+}

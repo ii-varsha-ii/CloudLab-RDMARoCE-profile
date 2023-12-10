@@ -1,8 +1,11 @@
 package main
 
 import (
+	"time"
+
 	"github.com/ii-varsha-ii/CloudLab-RDMARoCE-profile/container/api_handler"
 	"github.com/ii-varsha-ii/CloudLab-RDMARoCE-profile/container/redis_handler"
+	"github.com/ii-varsha-ii/CloudLab-RDMARoCE-profile/container/rpc_handler"
 	"github.com/ii-varsha-ii/CloudLab-RDMARoCE-profile/container/sql_handler"
 	"github.com/ii-varsha-ii/CloudLab-RDMARoCE-profile/container/utils"
 	log "github.com/sirupsen/logrus"
@@ -21,6 +24,7 @@ var (
 	sqlDBHost           string
 	sqlDBPort           string
 	ctx                 context.Context
+	cancel context.CancelFunc
 )
 
 func initialize() {
@@ -36,7 +40,7 @@ func initialize() {
 	sqlDBHost = utils.GetEnv("SQL_DB_HOST", true)
 	sqlDBPort = utils.GetEnv("SQL_DB_PORT", true)
 
-	ctx = context.Background()
+	ctx, cancel = context.WithTimeout(context.Background(), time.Second)
 
 	if err := redis_handler.InitializeClient(ctx, redisMasterIP, redisMasterPort, redisMasterPassword, redisWriteKey, redisListenKey, 0); err != nil {
 		log.Fatalf("Exception while initializing Redis client: %v", err)
@@ -51,10 +55,14 @@ func initialize() {
 	}
 
 	api_handler.InitializeAPIServer()
+
+	go redis_handler.ReadFromRedisContinuously(ctx)
+	go rpc_handler.StartRPCServer()
 }
 
 func close() {
 	log.Infof("Closing Clients")
+	cancel()
 	redis_handler.Close()
 	sql_handler.Close()
 }

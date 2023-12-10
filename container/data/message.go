@@ -55,6 +55,11 @@ type RedisMessage struct {
 	WriteTime time.Time `json:"writeTime"`
 }
 
+type APIMessage struct {
+	Message   string    `json:"message"`
+	WriteTime time.Time `json:"writeTime"`
+}
+
 type WriteMessage struct {
 	SourceType      Source_Type `json:"sourceType"`
 	MessageSizeInKB int         `json:"messageSizeInKB"`

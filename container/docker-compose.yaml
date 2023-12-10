@@ -15,8 +15,9 @@ services:
       - SQL_DB_HOST=127.0.0.1
       - SQL_DB_PORT=5432
     network_mode: "host"
+    restart: always
     depends_on:
-      - mysql
+      - sql
 
   sql:
     image: postgres:12

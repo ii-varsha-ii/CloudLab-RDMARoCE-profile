@@ -77,7 +77,7 @@ fi
 
 if [ "$3" == "True" ]; then
   printf "Installing redis-server \n"
-  sudo /local/repository/redis_start.sh $3 $4
+  sudo /local/repository/redis_start.sh $3 $2 $4
 fi
 
 ifname=$(ip route list "$2""/24" | awk '{print $3}')

@@ -2,8 +2,8 @@
 
 set +x
 
-if [ "$#" -ne 2 ]; then
-    echo "Usage: $0 <Redis Availability: True, False> <Node Number: 0....N>"
+if [ "$#" -ne 3 ]; then
+    echo "Usage: $0 <Redis Availability: True|False> <Node IP: \"x.x.x.x\"> <Node Number: 0|....|N>"
     exit 1
 fi
 
@@ -14,11 +14,12 @@ PASSWORD="password"
 printf "Startup script to setup Redis - $1 $2 \n"
 
 if [ "$1" == "True" ]; then
-  node_num="$2"
+  node_ip="$2"
+  node_num="$3"
   printf "Installing redis \n"
   sudo apt update
   sudo apt install redis-server -y
-  sudo sed -i "s/^bind .*/bind 127.0.0.1 ::1 $IP_PREFIX.$((node_num + 1))/" "/etc/redis/redis.conf"
+  sudo sed -i "s/^bind .*/bind 127.0.0.1 ::1 $node_ip/" "/etc/redis/redis.conf"
   sudo sed -i "s/^protected-mode .*/protected-mode no/" "/etc/redis/redis.conf"
   if [ "$node_num" != "0" ]; then
     printf "Initializing redis-client \n"

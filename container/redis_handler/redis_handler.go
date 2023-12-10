@@ -3,11 +3,12 @@ package redis_handler
 import (
 	"context"
 	"fmt"
+	"strings"
+	"time"
+
 	"github.com/ii-varsha-ii/CloudLab-RDMARoCE-profile/container/data"
 	"github.com/ii-varsha-ii/CloudLab-RDMARoCE-profile/container/sql_handler"
 	"github.com/ii-varsha-ii/CloudLab-RDMARoCE-profile/container/utils"
-	"strings"
-
 	"github.com/redis/go-redis/v9"
 	log "github.com/sirupsen/logrus"
 )
@@ -53,6 +54,7 @@ func ReadFromRedisContinuously(ctx context.Context) {
 
 	// Infinite loop to continuously listen for changes. Only handle new messages.
 	lastMsg, _ := redisClient.Get(ctx, redisListenKey).Result()
+	log.Infof("ReadFromRedisContinuously: Started.")
 	for {
 		val, err := redisClient.Get(ctx, redisListenKey).Result()
 		if err == nil && val != lastMsg {
@@ -71,27 +73,30 @@ func ReadFromRedisContinuously(ctx context.Context) {
 			}
 			log.Infof("ReadFromRedisContinuously: Received message: %s\n", msg.String())
 			if err := sql_handler.RecordToDatabase(msg); err != nil {
-				log.Errorf("ReadFromRedisContinuously: Exceotion while writing Message: %s to SQL DB: %v", msg.String(), err)
+				log.Errorf("ReadFromRedisContinuously: Exception while writing Message: %s to SQL DB: %v", msg.String(), err)
+				continue
 			}
 			log.Infof("ReadFromRedisContinuously: Successfully wrote message: %s to SQL DB\n", msg.String())
 		}
 	}
 }
 
-func HandleBulkWrite(writeMessage data.WriteMessage) error {
+func RedisHandleBulkWrite(writeMessage data.WriteMessage) error {
 	msg := utils.GenerateString(writeMessage.MessageSizeInKB)
+	log.Infof("RedisHandleBulkWrite: Started.")
 	for i := 0; i < writeMessage.MessageCount; i++ {
-		redisMsg := fmt.Sprintf("%s:%s", utils.GetCurrentTimeStr(), msg)
+		redisMsg := fmt.Sprintf("%s--%s", utils.GetCurrentTimeStr(), msg)
 		if err := WriteToRedis(redisMsg); err != nil {
-			log.Errorf("HandleBulkWrite: Exception while writing message to redis: %v", err)
+			log.Errorf("RedisHandleBulkWrite: Exception while writing message to redis: %v", err)
 			return err
 		}
+		time.Sleep(1 * time.Second)
 	}
 	return nil
 }
 
 func parseRedisMessage(message string) data.RedisMessage {
-	vals := strings.Split(message, ":")
+	vals := strings.Split(message, "--")
 	redisMsg := data.RedisMessage{
 		Message:   vals[1],
 		WriteTime: utils.ParseStrTime(vals[0]),

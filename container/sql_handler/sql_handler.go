@@ -12,17 +12,17 @@ import (
 
 const (
 	TableName = "rdmaredis"
-	Driver = "postgres"
+	Driver    = "postgres"
 )
 
 var (
-	sqlDB *sql.DB
-	err   error
+	sqlDB  *sql.DB
+	err    error
 	dbName string
 )
 
 func InitializeSQLClient(sqlDBUser, sqlDBPassword, sqlDBHost, sqlDBPort, sqlDBName string) error {
-	connectStr := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", sqlDBHost, sqlDBPort, sqlDBUser, sqlDBPassword, sqlDBName)
+	connectStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", sqlDBHost, sqlDBPort, sqlDBUser, sqlDBPassword, sqlDBName)
 	log.Infof("InitializeSQLClient: SQL connect string: %s", connectStr)
 	sqlDB, err = sql.Open(Driver, connectStr)
 	if err != nil {
@@ -44,8 +44,8 @@ func Close() error {
 
 // CreateTable creates the necessary table in the SQL database
 func CreateTable() error {
-	createTableStmt := `CREATE TABLE IF NOT EXISTS $1 (ID  SERIAL PRIMARY KEY, name TEXT, Message TEXT, SourceType TEXT, MessageSizeInKB INT, WriteTime TIMESTAMP, ReadTime TIMESTAMP, DiffInMs INT)`
-	if _, err := sqlDB.Exec(createTableStmt, TableName); err != nil {
+	createTableStmt := fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s (ID  SERIAL PRIMARY KEY, Message TEXT, SourceType TEXT, MessageSizeInKB INT, WriteTime TIMESTAMP, ReadTime TIMESTAMP, DiffInMs INT)`, TableName)
+	if _, err := sqlDB.Exec(createTableStmt); err != nil {
 		log.Errorf("CreateTable: Exception while creating table %s on SQL DB: %v", TableName, err)
 		return err
 	}
@@ -54,21 +54,21 @@ func CreateTable() error {
 
 // RecordToDatabase records the MessageID, WrittenTime, and ReadTime to the SQL database
 func RecordToDatabase(message *data.Message) error {
-	insertMsgStmt := `insert into $1 ("Message", "SourceType", "MessageSizeInKB", "WriteTime", "ReadTime", "DiffInMs") values($2, $3, $4, $5, $6, $7)`
-	if _, err := sqlDB.Exec(insertMsgStmt, TableName, message.Message, message.GetSourceTypeAsStr(), message.MessageSizeInKB, message.WriteTime, message.ReadTime, message.DiffInMs); err != nil {
+	insertMsgStmt := fmt.Sprintf(`insert into %s (message, sourcetype, messagesizeinkb, writetime, readtime, diffinms) values($1, $2, $3, $4, $5, $6)`, TableName)
+	if _, err := sqlDB.Exec(insertMsgStmt, message.Message, message.GetSourceTypeAsStr(), message.MessageSizeInKB, message.WriteTime, message.ReadTime, message.DiffInMs); err != nil {
 		log.Errorf("RecordToDatabase: Exception while writing \"%s\" to SQL DB: %v", message.String(), err)
 		return err
 	}
 
-	log.Errorf("RecordToDatabase: Successfully wrote message \"%s\" to SQL DB.", message.String())
+	log.Infof("RecordToDatabase: Successfully wrote message \"%s\" to SQL DB.", message.String())
 	return nil
 }
 
 // ReadAllData retrieves all data from the SQL database table
 func ReadAllData() ([]data.Message, error) {
 	result := make([]data.Message, 0)
-	selectMsgsStmt := `select * from $1`
-	rows, err := sqlDB.Query(selectMsgsStmt, TableName)
+	selectMsgsStmt := fmt.Sprintf(`select * from %s`, TableName)
+	rows, err := sqlDB.Query(selectMsgsStmt)
 	if err != nil {
 		log.Errorf("ReadAllData: Exception while reading all data from table %s on SQL DB: %v", TableName, err)
 		return nil, err
@@ -101,6 +101,6 @@ func ReadAllData() ([]data.Message, error) {
 		}
 		result = append(result, messageStruct)
 	}
-	log.Errorf("ReadAllData: Successfully read all data from table %s on SQL DB.", TableName)
+	log.Infof("ReadAllData: Successfully read all data from table %s on SQL DB.", TableName)
 	return result, nil
 }
