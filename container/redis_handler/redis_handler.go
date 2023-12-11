@@ -57,8 +57,9 @@ func ReadFromRedisContinuously(ctx context.Context) {
 	log.Infof("ReadFromRedisContinuously: Started Listening on %s.", redisListenKey)
 	for {
 		val, err := redisClient.Get(ctx, redisListenKey).Result()
-		if err != nil {
+		if err != nil && err != redis.Nil {
 			log.Errorf("ReadFromRedisContinuously: Exception while reading from key %s. %v", redisListenKey, err)
+			continue
 		}
 		if err == nil && val != lastMsg {
 			lastMsg = val
