@@ -87,11 +87,11 @@ fi
 if [ "$4" == 0 ]; then # server
   sudo touch /local/repository/server.logs
   sudo chmod 777 /local/repository/server.logs
-  /local/repository/bin/server &> /local/repository/server.logs &
+#  /local/repository/bin/server &> /local/repository/server.logs &
 elif [ "$4" == 1 ]; then
   sudo touch /local/repository/client.logs
   sudo chmod 777 /local/repository/client.logs
-  /local/repository/bin/client -a "$2" -p $PORT &> /local/repository/client.logs &
+#  /local/repository/bin/client -a "$2" -p $PORT &> /local/repository/client.logs &
 fi
 
 ifname=$(ip route list "$2""/24" | awk '{print $3}')
