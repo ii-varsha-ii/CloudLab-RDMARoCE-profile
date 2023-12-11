@@ -1,5 +1,6 @@
 #!/bin/bash
 
+PORT=12345
 set +x
 
 if [ "$#" -ne 4 ]; then
@@ -48,7 +49,7 @@ add_siw() {
 
 link_rdma_device() {
   printf "Link RDMA \n"
-  sudo rdma link add t_"$ifname" type "$1" netdev "$ifname"
+  sudo rdma link add t_"$1" type "$1" netdev "$ifname"
 }
 
 install_docker() {
@@ -62,6 +63,8 @@ install_docker() {
   chmod +x ~/.docker/cli-plugins/docker-compose
 }
 
+
+
 initial_setup
 add_ib_core
 add_rdma_cm
@@ -71,6 +74,7 @@ install_docker
 if [ "$1" == "rxe" ]; then
   add_rdma_rxe
 fi
+
 if [ "$1" == "siw" ]; then
   add_siw
 fi
@@ -78,6 +82,12 @@ fi
 if [ "$3" == "True" ]; then
   printf "Installing redis-server \n"
   sudo /local/repository/redis_start.sh $3 $2 $4
+fi
+
+if [ "$4" == 0 ]; then # server
+  bin/server >> /local/repository/server.logs &
+elif [ "$4" == 1 ]; then
+  bin/client -a "$2" -p $PORT >> /local/repository/client.logs &
 fi
 
 ifname=$(ip route list "$2""/24" | awk '{print $3}')
