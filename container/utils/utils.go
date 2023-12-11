@@ -1,12 +1,14 @@
 package utils
 
 import (
+	"math/rand"
 	"os"
-	"strings"
 	"time"
 
 	log "github.com/sirupsen/logrus"
 )
+
+const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 func GetEnv(name string, panicIfEmpty bool) string {
 	val := os.Getenv(name)
@@ -30,10 +32,17 @@ func ParseStrTime(strTime string) time.Time {
 }
 
 func GenerateString(sizeInKB int) string {
-	sizeInBytes := sizeInKB * 1024
-	str := strings.Repeat("a", sizeInBytes)
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
-	return str
+	totalBytes := sizeInKB * 1024
+
+	randomBytes := make([]byte, totalBytes)
+
+	for i := 0; i < totalBytes; i++ {
+		randomBytes[i] = letterBytes[r.Intn(len(letterBytes))]
+	}
+
+	return string(randomBytes)
 }
 
 func GetMessageSizeInKB(message string) int {

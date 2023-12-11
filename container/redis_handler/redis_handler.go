@@ -54,9 +54,12 @@ func ReadFromRedisContinuously(ctx context.Context) {
 
 	// Infinite loop to continuously listen for changes. Only handle new messages.
 	lastMsg, _ := redisClient.Get(ctx, redisListenKey).Result()
-	log.Infof("ReadFromRedisContinuously: Started.")
+	log.Infof("ReadFromRedisContinuously: Started Listening on %s.", redisListenKey)
 	for {
 		val, err := redisClient.Get(ctx, redisListenKey).Result()
+		if err != nil {
+			log.Errorf("ReadFromRedisContinuously: Exception while reading from key %s. %v", redisListenKey, err)
+		}
 		if err == nil && val != lastMsg {
 			lastMsg = val
 			currentTime := utils.GetCurrentTime()
@@ -71,7 +74,7 @@ func ReadFromRedisContinuously(ctx context.Context) {
 				ReadTime:        currentTime,
 				DiffInMs:        currentTime.Sub(redisMsg.WriteTime).Milliseconds(),
 			}
-			log.Infof("ReadFromRedisContinuously: Received message: %s\n", msg.String())
+			log.Infof("ReadFromRedisContinuously: Received message for key %s: %s\n", redisListenKey, msg.String())
 			if err := sql_handler.RecordToDatabase(msg); err != nil {
 				log.Errorf("ReadFromRedisContinuously: Exception while writing Message: %s to SQL DB: %v", msg.String(), err)
 				continue
